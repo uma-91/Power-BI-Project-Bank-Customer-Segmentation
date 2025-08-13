@@ -1,0 +1,6 @@
+Domain   		           :  Banking / Financial Services
+Problem Statement   :  Identify top-performing customers    based on total transaction value or balance.
+	                     Segment customers((e.g., Loyal, Lost, New) based on transaction frequency, value, and recency.
+                    	 Detect peak transaction periods   by day and time.
+	                    Create interactive dashboards   in Power BI for stakeholders to filter and explore data (by date, 	amount, customer segment)
+
