@@ -1,0 +1,57 @@
+#"Customer Segmentation"
+Customer Segment Final = 
+VAR CustomerMonths =
+    CALCULATETABLE(
+        VALUES('bank_transactions'[Txn Month Num]),
+        ALLEXCEPT('bank_transactions', 'bank_transactions'[CustomerID])
+    )
+
+VAR TxnInAug = 
+    COUNTROWS(
+        FILTER(CustomerMonths, 'bank_transactions'[Txn Month Num] = 8)
+    ) > 0
+
+VAR TxnInSep = 
+    COUNTROWS(
+        FILTER(CustomerMonths, 'bank_transactions'[Txn Month Num] = 9)
+    ) > 0
+
+VAR TxnInOct = 
+    COUNTROWS(
+        FILTER(CustomerMonths, 'bank_transactions'[Txn Month Num] = 10)
+    ) > 0
+
+VAR MonthCount = COUNTROWS(CustomerMonths)
+
+RETURN
+    SWITCH(
+        TRUE(),
+        MonthCount >= 2, "Loyal",
+        TxnInOct && NOT TxnInAug && NOT TxnInSep, "New",
+        TxnInAug && NOT TxnInSep && NOT TxnInOct, "Lost",
+        "Unclassified"
+    )
+    
+#"age-group"
+Age_Group = 
+SWITCH(
+    TRUE(),
+    [age] < 20, "Under 20",
+    [age] >= 20 && [age] < 30, "20–29",
+    [age] >= 30 && [age] < 40, "30–39",
+    [age] >= 40 && [age] < 50, "40–49",
+    [age] >= 50, "50+",
+    "Unknown"
+)
+#"revenue per customer "
+Avg Revenue per Customer = 
+AVERAGEX(
+    VALUES('bank_transactions'[CustomerID]),
+    CALCULATE(SUM('bank_transactions'[TransactionAmount (INR)]))
+)
+#"last transaction date"
+LastTransactionDate = 
+CALCULATE(
+    MAX('bank_transactions'[TransactionDate]),
+    ALLEXCEPT('bank_transactions', 'bank_transactions'[CustomerID])
+)
